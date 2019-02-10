@@ -24,7 +24,7 @@ export class TodoController {
                 message: 'Todo created successfully'
               });
         })
-      .catch(error => res.status(400).send(error));
+      .catch(error => res.status(400).json({error}));
     }
 
     /**
@@ -49,7 +49,7 @@ export class TodoController {
       }
 
     /**
-     * @description controller function that get a specific todo
+     * @description controller function that gets a specific todo
      * @param {Object} req - Express request object
      * @param {Object} res - Express response object
      * @return {undefined}
@@ -75,6 +75,68 @@ export class TodoController {
                 });
             }
           })
-          .catch(error => res.status(400).send(error));
+          .catch(error => res.status(400).json({error}));
+      }
+
+    /**
+     * @description controller function that updates a specific todo
+     * @param {Object} req - Express request object
+     * @param {Object} res - Express response object
+     * @return {undefined}
+     */
+     static updateTodo(req, res) {
+          const { todoId } = req.params;
+          const { title } = req.body;
+        Todo
+          .findById(todoId, {
+            include: [{
+              model: TodoItem,
+              as: 'todoItems',
+            }],
+          })
+          .then(todo => {
+            if (!todo) {
+              res.status(404).json({
+                  status: 404,
+                message: 'Todo Not Found',
+              });
+            } else {
+            todo
+              .update({
+                title
+              })
+              .then(() => res.status(200).json({todo}))  // Send back the updated todo.
+              .catch((error) => res.status(400).json({error}));
+            }
+          })
+          .catch((error) => res.status(400).json({error}));
+      }
+
+    /**
+     * @description controller function that deletes a specific todo
+     * @param {object} req - Express request object
+     * @param {object} res - Express response object
+     * @return {undefined}
+     */
+      static deleteTodo(req, res) {
+          const { todoId } = req.params;
+        return Todo
+          .findById(todoId)
+          .then(todo => {
+            if (!todo) {
+              return res.status(400).json({
+                status: 404,
+                message: 'Todo Not Found',
+              });
+            }
+            return todo
+              .destroy()
+              .then(() => res.status(200).json({
+                  status: 200,
+                  messaage: 'Todo item deleted successfully'
+              }))
+              .catch(error => res.status(400).json({error}));
+          })
+          .catch(error => res.status(400).json({error}));
       }
 }

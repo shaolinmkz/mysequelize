@@ -6,5 +6,6 @@ const todoRoutes = express.Router();
 todoRoutes.post("/v1/api/todos", TodoController.createTodo);
 todoRoutes.get("/v1/api/todos", TodoController.getAllTodos);
 todoRoutes.get("/v1/api/todos/:todoId", TodoController.getSpecificTodo);
+todoRoutes.put('/v1/api/todos/:todoId', TodoController.updateTodo);
 
 export default todoRoutes;
