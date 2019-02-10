@@ -28,4 +28,70 @@ export class TodoItemController {
         })
       .catch(error => res.status(400).send(error));
     }
+
+    /**
+     * @description controller function that updates a todo-item
+     * @param {object} req - Express request object
+     * @param {object} res - Express response object
+     * @return {undefined}
+     */
+    static updateTodoItem(req, res) {
+        const { todoItemId, todoId } = req.params;
+        const { content, complete } = req.body;
+
+        TodoItem.find({
+              where: {
+                id: todoItemId,
+                todoId,
+              },
+            })
+          .then(todoItem => {
+            if (!todoItem) {
+              res.status(404).json({
+                message: 'TodoItem Not Found',
+              });
+            } else {
+                todoItem.update({
+                content,
+                complete
+              })
+              .then(updatedTodoItem => res.status(200).json(updatedTodoItem))
+              .catch(error => res.status(400).json(error));
+            }
+          })
+          .catch(error => res.status(400).json(error));
+      }
+
+    /**
+     * @description controller function that deletes a todo-item
+     * @param {object} req - Express request object
+     * @param {object} res - Express response object
+     * @return {undefined}
+     */
+      static deleteTodoItem(req, res) {
+        const { todoItemId, todoId } = req.params
+
+        TodoItem.find({
+              where: {
+                id: todoItemId,
+                todoId,
+              },
+            })
+          .then(todoItem => {
+            if (!todoItem) {
+              return res.status(404).json({
+                  status: 404,
+                message: 'TodoItem Not Found',
+              });
+            } else {
+                todoItem.destroy()
+              .then(() => res.status(200).json({
+                status: 200,
+                message: 'Todo item deleted successfully'
+              }))
+              .catch(error => res.status(400).json({error}));
+            }
+          })
+          .catch(error => res.status(400).json({error}));
+      }
 }

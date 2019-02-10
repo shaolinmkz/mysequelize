@@ -4,6 +4,7 @@ import { TodoItemController } from '../controllers';
 const todoItemRoutes = express.Router();
 
 todoItemRoutes.post("/v1/api/todos/:todoId/items", TodoItemController.createTodoItem);
-// todoItemRoutes.get("/v1/api/todos/items", TodoItemController.getAllTodoItems);
+todoItemRoutes.put("/v1/api/todos/:todoId/items/:todoItemId", TodoItemController.updateTodoItem);
+todoItemRoutes.delete("/v1/api/todos/:todoId/items/:todoItemId", TodoItemController.deleteTodoItem);
 
 export default todoItemRoutes;

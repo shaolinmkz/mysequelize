@@ -133,7 +133,7 @@ export class TodoController {
               .destroy()
               .then(() => res.status(200).json({
                   status: 200,
-                  messaage: 'Todo item deleted successfully'
+                  messaage: 'Todo deleted successfully'
               }))
               .catch(error => res.status(400).json({error}));
           })
