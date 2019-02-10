@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import router from "./routes";
+import { todoRoutes, todoItemRoutes } from "./routes";
 import logger from "morgan";
 dotenv.config();
 
@@ -16,13 +16,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // logger
 app.use(logger("dev"));
 
-// use router
-app.use(router);
+// use routers
+app.use(todoRoutes);
+app.use(todoItemRoutes);
 
 // Enable cors (Cross Origin Resource Sharing)
 app.use(cors());
 
-const PORT = process.env.PORT;
+app.get("*", (req, res) => {
+    res.status(200).json({
+        status: 200,
+        message: "Welcome to the Todo sequelize training setup"
+    })
+});
 
+const PORT = process.env.PORT;
 
 app.listen(PORT, () => console.log("Listening on port " + PORT));
